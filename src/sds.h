@@ -33,6 +33,7 @@
 #ifndef __SDS_H
 #define __SDS_H
 
+// 最大预分配长度1M
 #define SDS_MAX_PREALLOC (1024*1024)
 extern const char *SDS_NOINIT;
 
@@ -40,7 +41,16 @@ extern const char *SDS_NOINIT;
 #include <stdarg.h>
 #include <stdint.h>
 
+/*
+ * 类型别名，用于指向 sdshdr 的 buf 属性
+ */
 typedef char *sds;
+/*
+*  len : 字符串已占用长度
+*  alloc ： 总分配空间，包含头和终止符
+*  flags ： 表示类型
+*  buf[] ： 字符串
+*/
 
 /* Note: sdshdr5 is never used, we just access the flags byte directly.
  * However is here to document the layout of type 5 SDS strings. */
@@ -73,6 +83,7 @@ struct __attribute__ ((__packed__)) sdshdr64 {
     char buf[];
 };
 
+//flags类型定义
 #define SDS_TYPE_5  0
 #define SDS_TYPE_8  1
 #define SDS_TYPE_16 2
@@ -84,6 +95,8 @@ struct __attribute__ ((__packed__)) sdshdr64 {
 #define SDS_HDR(T,s) ((struct sdshdr##T *)((s)-(sizeof(struct sdshdr##T))))
 #define SDS_TYPE_5_LEN(f) ((f)>>SDS_TYPE_BITS)
 
+// 获取sds实际保存的字符串长度
+// 根据类型获取len参数，->代表引用
 static inline size_t sdslen(const sds s) {
     unsigned char flags = s[-1];
     switch(flags&SDS_TYPE_MASK) {
@@ -100,7 +113,12 @@ static inline size_t sdslen(const sds s) {
     }
     return 0;
 }
-
+/*
+*   获取sds可用空间的长度
+*
+*   alloc-len
+*   总空间长度-已用空间长度
+*/
 static inline size_t sdsavail(const sds s) {
     unsigned char flags = s[-1];
     switch(flags&SDS_TYPE_MASK) {
@@ -126,7 +144,10 @@ static inline size_t sdsavail(const sds s) {
     }
     return 0;
 }
-
+/*
+*      设置sds已用空间长度
+*
+*/
 static inline void sdssetlen(sds s, size_t newlen) {
     unsigned char flags = s[-1];
     switch(flags&SDS_TYPE_MASK) {
@@ -151,6 +172,9 @@ static inline void sdssetlen(sds s, size_t newlen) {
     }
 }
 
+/*
+*   增加sds已用空间长度
+*/
 static inline void sdsinclen(sds s, size_t inc) {
     unsigned char flags = s[-1];
     switch(flags&SDS_TYPE_MASK) {
@@ -175,7 +199,7 @@ static inline void sdsinclen(sds s, size_t inc) {
             break;
     }
 }
-
+// 获取sds总空间
 /* sdsalloc() = sdsavail() + sdslen() */
 static inline size_t sdsalloc(const sds s) {
     unsigned char flags = s[-1];
@@ -194,6 +218,9 @@ static inline size_t sdsalloc(const sds s) {
     return 0;
 }
 
+/*
+*   设置sds的总空间长度
+*/
 static inline void sdssetalloc(sds s, size_t newlen) {
     unsigned char flags = s[-1];
     switch(flags&SDS_TYPE_MASK) {
