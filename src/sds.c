@@ -123,8 +123,8 @@ sds _sdsnewlen(const void *init, size_t initlen, int trymalloc) {
     size_t usable;
     // 判断是否会越界
     assert(initlen + hdrlen + 1 > initlen); /* Catch size_t overflow */
-    // sds的分配空间，类型初始空间+字符串长度+1，+1为终止符‘\0’,比如字符串abc在64位系统初始空间4位总空间长度为=4+3+1=7
-    // unsable空间大小为，分配空间+预分配空间
+    // sds的分配空间，类型初始空间（头部）+字符串长度+1，+1为终止符‘\0’,比如字符串abc在64位系统初始空间4位总空间长度为=4+3+1=7
+    // &usable空间大小为，分配空间+预分配空间
     sh = trymalloc?
         s_trymalloc_usable(hdrlen+initlen+1, &usable) :
         s_malloc_usable(hdrlen+initlen+1, &usable);
@@ -174,7 +174,7 @@ sds _sdsnewlen(const void *init, size_t initlen, int trymalloc) {
         }
     }
     if (initlen && init)
-        memcpy(s, init, initlen); // 字符串赋值给sds
+        memcpy(s, init, initlen); // 字符串赋值给sds的buf
     s[initlen] = '\0'; // sds结尾设置终止符，与C字符串兼容
     return s; // 返回sds指针
 }

@@ -47,7 +47,7 @@ extern const char *SDS_NOINIT;
 typedef char *sds;
 /*
 *  len : 字符串已占用长度
-*  alloc ： 总分配空间，包含头和终止符
+*  alloc ： 总的字符串长度，不包含头部和终止符
 *  flags ： 表示类型
 *  buf[] ： 字符串
 */
@@ -95,7 +95,7 @@ struct __attribute__ ((__packed__)) sdshdr64 {
 #define SDS_HDR(T,s) ((struct sdshdr##T *)((s)-(sizeof(struct sdshdr##T))))
 #define SDS_TYPE_5_LEN(f) ((f)>>SDS_TYPE_BITS)
 
-// 获取sds实际保存的字符串长度
+// 获取sds实际已保存的字符串长度
 // 根据类型获取len参数，->代表引用
 static inline size_t sdslen(const sds s) {
     unsigned char flags = s[-1];
@@ -199,7 +199,7 @@ static inline void sdsinclen(sds s, size_t inc) {
             break;
     }
 }
-// 获取sds总空间
+// 获取sds总空间，alloc
 /* sdsalloc() = sdsavail() + sdslen() */
 static inline size_t sdsalloc(const sds s) {
     unsigned char flags = s[-1];
