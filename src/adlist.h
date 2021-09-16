@@ -32,53 +32,53 @@
 #define __ADLIST_H__
 
 /* Node, List, and Iterator are the only data structures used currently. */
-
+/*双向链表节点*/
 typedef struct listNode {
-    struct listNode *prev;
-    struct listNode *next;
-    void *value;
+    struct listNode *prev; // 前向节点
+    struct listNode *next; // 后向节点
+    void *value;           // 节点的值
 } listNode;
-
+/*双向链表迭代器*/
 typedef struct listIter {
-    listNode *next;
-    int direction;
+    listNode *next;   // 当前节点
+    int direction; // 迭代方向，0正向，1逆向
 } listIter;
-
+/*双端链表结构*/
 typedef struct list {
-    listNode *head;
-    listNode *tail;
-    void *(*dup)(void *ptr);
-    void (*free)(void *ptr);
-    int (*match)(void *ptr, void *key);
-    unsigned long len;
+    listNode *head; // 表头节点
+    listNode *tail; // 表尾节点
+    void *(*dup)(void *ptr); // 节点值复制函数
+    void (*free)(void *ptr); // 节点值释放函数
+    int (*match)(void *ptr, void *key); // 节点值匹配函数
+    unsigned long len; // 链表长度
 } list;
 
 /* Functions implemented as macros */
-#define listLength(l) ((l)->len)
-#define listFirst(l) ((l)->head)
-#define listLast(l) ((l)->tail)
-#define listPrevNode(n) ((n)->prev)
-#define listNextNode(n) ((n)->next)
-#define listNodeValue(n) ((n)->value)
+#define listLength(l) ((l)->len) // 获取链表长度函数
+#define listFirst(l) ((l)->head) // 获取链表表头函数
+#define listLast(l) ((l)->tail) // 获取链表表尾函数
+#define listPrevNode(n) ((n)->prev) // 获取链表前向节点
+#define listNextNode(n) ((n)->next) // 获取链表后向节点
+#define listNodeValue(n) ((n)->value) // 获取节点值
 
-#define listSetDupMethod(l,m) ((l)->dup = (m))
-#define listSetFreeMethod(l,m) ((l)->free = (m))
-#define listSetMatchMethod(l,m) ((l)->match = (m))
+#define listSetDupMethod(l,m) ((l)->dup = (m)) // 设置链表拷贝函数
+#define listSetFreeMethod(l,m) ((l)->free = (m)) // 设置链表内存释放函数
+#define listSetMatchMethod(l,m) ((l)->match = (m)) // 设置链表值匹配函数
 
-#define listGetDupMethod(l) ((l)->dup)
-#define listGetFreeMethod(l) ((l)->free)
-#define listGetMatchMethod(l) ((l)->match)
+#define listGetDupMethod(l) ((l)->dup) // 获取链表拷贝函数
+#define listGetFreeMethod(l) ((l)->free) // 获取链表内存释放函数
+#define listGetMatchMethod(l) ((l)->match) // 获取链表值匹配函数
 
 /* Prototypes */
-list *listCreate(void);
-void listRelease(list *list);
-void listEmpty(list *list);
-list *listAddNodeHead(list *list, void *value);
-list *listAddNodeTail(list *list, void *value);
-list *listInsertNode(list *list, listNode *old_node, void *value, int after);
-void listDelNode(list *list, listNode *node);
-listIter *listGetIterator(list *list, int direction);
-listNode *listNext(listIter *iter);
+list *listCreate(void); // 创建链表
+void listRelease(list *list); // 释放链表，会调用ListEmpty（）
+void listEmpty(list *list); // 释放链表里所有节点的值内存
+list *listAddNodeHead(list *list, void *value); // 创建节点并且增加到表头
+list *listAddNodeTail(list *list, void *value); // 创建节点并且增加到表尾
+list *listInsertNode(list *list, listNode *old_node, void *value, int after); // 创建节点，并且插入到目标节点的之前或者之后
+void listDelNode(list *list, listNode *node); // 从双向链表中删除该节点
+listIter *listGetIterator(list *list, int direction); // 获取双向链表迭代器
+listNode *listNext(listIter *iter); // 双向链表迭代器获取下一个节点
 void listReleaseIterator(listIter *iter);
 list *listDup(list *orig);
 listNode *listSearchKey(list *list, void *key);
@@ -90,7 +90,8 @@ void listRotateHeadToTail(list *list);
 void listJoin(list *l, list *o);
 
 /* Directions for iterators */
-#define AL_START_HEAD 0
-#define AL_START_TAIL 1
+// 迭代器方向
+#define AL_START_HEAD 0 // 从表头向表尾迭代
+#define AL_START_TAIL 1 // 从表尾向表头迭代
 
 #endif /* __ADLIST_H__ */

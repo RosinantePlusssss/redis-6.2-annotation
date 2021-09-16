@@ -4,4 +4,5 @@
 * 源码阅读顺序
 
 ** 数据结构
-   - 动态字符串：sds.h,sds.c
+   - 动态字符串：[[./src/sds.h][sds.h]]，[[./src/sds.c][sds.c]]
+   - 双向链表：[[./src/adlist.h][adlist.h]]，[[./src/adlist.c][adlist.c]]
