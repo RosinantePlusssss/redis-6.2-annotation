@@ -6,3 +6,4 @@
 ** 数据结构
    - 动态字符串：[[./src/sds.h][sds.h]]，[[./src/sds.c][sds.c]]
    - 双向链表：[[./src/adlist.h][adlist.h]]，[[./src/adlist.c][adlist.c]]
+   - 字典：[[./src/dict.h][dict.h]]，[[./src/dict.c][dict.c]]
