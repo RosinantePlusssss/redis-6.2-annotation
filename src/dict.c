@@ -1383,6 +1383,7 @@ static int _dictExpandIfNeeded(dict *d)
          d->ht[0].used/d->ht[0].size > dict_force_resize_ratio) &&
         dictTypeExpandAllowed(d))
     {
+        // // 新哈希表的大小至少是目前已使用节点数+1
         return dictExpand(d, d->ht[0].used + 1);
     }
     return DICT_OK;
