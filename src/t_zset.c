@@ -36,6 +36,9 @@
  * in order to get O(log(N)) INSERT and REMOVE operations into a sorted
  * data structure.
  *
+  * ZSET 同时使用两种数据结构来持有同一个元素，
+  * 从而提供 O(log(N)) 复杂度的有序数据结构的插入和移除操作。
+  *
  * The elements are added to a hash table mapping Redis objects to scores.
  * At the same time the elements are added to a skip list mapping scores
  * to Redis objects (so objects are sorted by scores in this "view").
@@ -47,6 +50,10 @@
  * So we should always remove an element from the dictionary, and later from
  * the skiplist.
  *
+  * 哈希表将 Redis 对象映射到分值上。
+  * 而跳跃表则将分值映射到 Redis 对象上，
+  * 以跳跃表的视角来看，可以说 Redis 对象是根据分值来排序的。
+  *
  * This skiplist implementation is almost a C translation of the original
  * algorithm described by William Pugh in "Skip Lists: A Probabilistic
  * Alternative to Balanced Trees", modified in three ways:
@@ -68,6 +75,14 @@ int zslLexValueLteMax(sds value, zlexrangespec *spec);
 
 /* Create a skiplist node with the specified number of levels.
  * The SDS string 'ele' is referenced by the node after the call. */
+ /*
+  * 创建一个层数为 level 的跳跃表节点，
+  * 并将节点的成员对象设置为 obj ，分值设置为 score 。
+  *
+  * 返回值为新创建的跳跃表节点
+  *
+  * T = O(1)
+  */
 zskiplistNode *zslCreateNode(int level, double score, sds ele) {
     zskiplistNode *zn =
         zmalloc(sizeof(*zn)+level*sizeof(struct zskiplistLevel));

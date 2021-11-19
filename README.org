@@ -7,3 +7,4 @@
    - 动态字符串：[[./src/sds.h][sds.h]]，[[./src/sds.c][sds.c]]
    - 双向链表：[[./src/adlist.h][adlist.h]]，[[./src/adlist.c][adlist.c]]
    - 字典：[[./src/dict.h][dict.h]]，[[./src/dict.c][dict.c]]
+   - 跳跃表：[[./src/server.h][server.h]]文件中关于zskiplist结构和zskiplistNode结构，以及[[./src/t_set.c][t_zset.c]]中所有以zsl开头的函数，比如zslCreate、zslInsert、zslDeleteNode,等等。
